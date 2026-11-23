@@ -1,0 +1,33 @@
+# ==============================================================================
+# CONFIGURAÇÃO DE REDE DO TOKEN RING UDP (SISTEMAS DISTRIBUÍDOS)
+# Arquivo de Exemplo / Modelo: rede.properties.example
+# ==============================================================================
+# Para configurar os 4 notebooks físicos conectados à mesma rede Wi-Fi:
+# 1. Copie este arquivo para 'config/rede.properties':
+#    cp config/rede.properties.example config/rede.properties
+# 2. Substitua os endereços IP abaixo pelos IPs IPv4 reais de cada notebook.
+# 3. O arquivo 'rede.properties' real é ignorado pelo Git para não expor IPs privados.
+#
+# OBSERVAÇÃO: Caso o arquivo 'rede.properties' não exista, o sistema utiliza
+# automaticamente o modo de loopback local (127.0.0.1) nas portas 5000 a 5003.
+# ==============================================================================
+
+# NOTEBOOK 1 — MESTRE (Processo ID 0)
+mestre.host=192.168.1.100
+mestre.port=5000
+
+# NOTEBOOK 2 — ESCRAVO 1 (Processo ID 1)
+escravo1.host=192.168.1.101
+escravo1.port=5001
+
+# NOTEBOOK 3 — ESCRAVO 2 (Processo ID 2)
+escravo2.host=192.168.1.102
+escravo2.port=5002
+
+# NOTEBOOK 4 — ESCRAVO 3 (Processo ID 3)
+escravo3.host=192.168.1.103
+escravo3.port=5003
+
+# Timeout de espera do socket UDP em milissegundos
+# 120000 ms = 2 minutos (tempo suficiente para cobrir os intervalos didáticos de 5s)
+socket.timeout.ms=120000

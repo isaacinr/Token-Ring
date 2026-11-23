@@ -1,0 +1,26 @@
+# Arquivos compilados do Java (.class)
+*.class
+bin/
+out/
+target/
+
+# Arquivo de configuração de rede local com IPs privados reais
+config/rede.properties
+
+# Backups locais de segurança dos originais
+backup/originais/
+
+# Arquivos e pastas de IDEs
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# Arquivos de sistema e temporários
+.DS_Store
+Thumbs.db
+*~
+*.log
+*.tmp

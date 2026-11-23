@@ -63,8 +63,88 @@
 
 ---
 
+## 🚀 Como Compilar e Executar
 
-  
+### 1. Compilação
+Execute o script utilitário de compilação ou compile diretamente com `javac`:
+```bash
+./scripts/compilar.sh
+# ou manualmente:
+mkdir -p bin
+javac -d bin src/modelo/*.java src/comunicacao/*.java src/util/*.java src/*.java src/testes/*.java
+```
+
+### 2. Comandos Oficiais da Disciplina
+Conforme especificação da disciplina, os quatro processos recebem rigorosamente 3 parâmetros:
+`java <Processo> <ID> <Operação: 0=+1 | 1=*2> <Voltas>`
+
+Em terminais separados (ou em notebooks físicos distintos na ordem inversa: 3 → 2 → 1 → 0):
+```bash
+# Terminal 4 (Escravo 3):
+java -cp bin Escravo 3 0 1
+
+# Terminal 3 (Escravo 2):
+java -cp bin Escravo 2 0 1
+
+# Terminal 2 (Escravo 1):
+java -cp bin Escravo 1 0 1
+
+# Terminal 1 (Mestre - inicia o token):
+java -cp bin Mestre 0 0 1
+```
+
+### 3. Execução Automatizada Local (4 Processos em Loopback)
+Para testar a topologia completa localmente em uma única máquina:
+```bash
+# Todos incrementando (+1) por 1 volta -> Resultado: 6
+./scripts/executar_todos_local.sh 0 1
+
+# Todos multiplicando (*2) por 1 volta -> Resultado: 32
+./scripts/executar_todos_local.sh 1 1
+
+# Duas voltas incrementando (+1) -> Resultado: 10
+./scripts/executar_todos_local.sh 0 2
+
+# Operações heterogêneas (Mestre=*2, E1=+1, E2=*2, E3=+1) -> Resultado: 14
+./scripts/executar_todos_local.sh 1 0 1 0 1
+```
+
+### 4. Execução da Suíte de Testes Automatizados
+```bash
+./scripts/executar_testes.sh
+```
+
+---
+
+## 📡 Execução Distribuída em 4 Notebooks Físicos (Wi-Fi)
+
+1. Conecte os 4 computadores à mesma rede Wi-Fi (ou hotspot do smartphone).
+2. Descubra os IPs locais de cada máquina (`hostname -I` no Linux ou `ipconfig` no Windows).
+3. Copie o arquivo de exemplo e configure os endereços reais em `config/rede.properties`:
+   ```bash
+   cp config/rede.properties.example config/rede.properties
+   ```
+4. Libere as portas UDP no firewall de cada máquina:
+   - **Mestre:** UDP `5000`
+   - **Escravo 1:** UDP `5001`
+   - **Escravo 2:** UDP `5002`
+   - **Escravo 3:** UDP `5003`
+5. Inicie os processos na ordem: **Escravo 3** $\to$ **Escravo 2** $\to$ **Escravo 1** $\to$ **Mestre**.
+
+---
+
+## 📚 Documentação Técnica Completa (`docs/`)
+
+| Documento | Descrição |
+| :--- | :--- |
+| [DOCUMENTACAO_TECNICA_INTEGRACAO_TOKEN_RING.md](docs/DOCUMENTACAO_TECNICA_INTEGRACAO_TOKEN_RING.md) | Documentação acadêmica detalhada (Seções A a H + 22 perguntas técnicas respondidas da banca) |
+| [RELATORIO_AUDITORIA_INICIAL.md](docs/RELATORIO_AUDITORIA_INICIAL.md) | Inventário e análise diagnóstica dos arquivos originais recebidos de cada integrante |
+| [CONFIGURACAO_REDE_LOCAL.md](docs/CONFIGURACAO_REDE_LOCAL.md) | Guia passo a passo de rede Wi-Fi, liberação de firewall, reserva DHCP e prevenção de AP Isolation |
+| [HISTORICO_DE_ALTERACOES.md](docs/HISTORICO_DE_ALTERACOES.md) | Registro cronológico minucioso de cada modificação e decisão de engenharia tomada |
+| [TESTES.md](docs/TESTES.md) | Protocolo completo de testes com provas matemáticas e classificação de status |
+
+---
+
 <h3 align="center">👨‍💻 Criadores</h3>
 
 <table align="center">
