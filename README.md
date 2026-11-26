@@ -196,13 +196,13 @@ Para testar a topologia completa localmente em uma única máquina:
       </p>
     </td>
     <td align="center" width="240px" valign="top">
-      <a href="https://www.linkedin.com/in/camila-cotrim-447a65a4/" target="_blank">
-        <img src="https://ui-avatars.com/api/?name=Camila+Cotrim&background=181717&color=ffffff&size=90&bold=true" width="90px" height="90px" alt="Camila Cotrim"/><br />
+      <a href="https://github.com/milacotrim" target="_blank">
+        <img src="https://github.com/milacotrim.png?size=90" width="90px" height="90px" alt="Camila Cotrim"/><br />
         <sub><b>Camila Cotrim</b></sub>
       </a>
       <p align="center">
-        <a href="https://www.linkedin.com/in/camila-cotrim-447a65a4/" target="_blank">
-          <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn Badge"/>
+        <a href="https://github.com/milacotrim" target="_blank">
+          <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Badge"/>
         </a>
       </p>
     </td>
