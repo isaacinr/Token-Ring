@@ -19,7 +19,6 @@
 5. [Seção E — Relatório Detalhado da Integração por Miqueias](#seção-e--relatório-detalhado-da-integração-por-miqueias)
 6. [Seção F — Guia de Configuração dos Quatro Notebooks](#seção-f--guia-de-configuração-dos-quatro-notebooks)
 7. [Seção G — Roteiro de Demonstração Acadêmica](#seção-g--roteiro-de-demonstração-acadêmica)
-8. [Seção H — Banco de Questões da Banca Examinadora (20+ Perguntas e Respostas)](#seção-h--banco-de-questões-da-banca-examinadora-20-perguntas-e-respostas)
 
 ---
 
@@ -76,12 +75,6 @@ Token-Ring/
 ├── config/                               # Arquivos de infraestrutura
 │   └── rede.properties.example           # Modelo comentado para preenchimento dos IPs reais
 │
-├── docs/                                 # Documentação oficial exigida
-│   ├── RELATORIO_AUDITORIA_INICIAL.md    # Inventário e diagnóstico das 5 partes originais
-│   ├── DOCUMENTACAO_TECNICA_INTEGRACAO_TOKEN_RING.md # Documento técnico mestre
-│   ├── CONFIGURACAO_REDE_LOCAL.md        # Manual de rede Wi-Fi e portas para os 4 PCs
-│   ├── HISTORICO_DE_ALTERACOES.md        # Registro cronológico detalhado das mudanças
-│   └── TESTES.md                         # Protocolo de testes com provas matemáticas
 │
 ├── scripts/                              # Scripts de automação em Bash
 │   ├── compilar.sh                       # Compilador via javac
@@ -254,71 +247,3 @@ Para uma apresentação impecável diante do professor:
    - Miqueias atuará explicando a arquitetura de integração, o protocolo de serialização binária de Heitor, as proteções de timeout de Vitor, a lógica de negócio de Camila e o controle de voltas de Isaac.
 
 ---
-
-## SEÇÃO H — BANCO DE QUESTÕES DA BANCA EXAMINADORA (20+ QUESTÕES)
-
-### Q01: Por que foi escolhido UDP em vez de TCP para este trabalho?
-**R:** Porque o professor especificou expressamente o UDP e porque o Token Ring troca mensagens pontuais de controle de estado. O UDP elimina a sobrecarga de aperto de mão (*handshake*) e encerramento de conexão do TCP.
-
-### Q02: Como o sistema impede que dois processos entrem em conflito de portas ao rodar no mesmo computador?
-**R:** O sistema adota portas distintas para cada processo: Mestre (5000), Escravo 1 (5001), Escravo 2 (5002) e Escravo 3 (5003).
-
-### Q03: Qual o formato exato da mensagem enviada na rede?
-**R:** Exatamente 8 bytes contendo dois números inteiros de 4 bytes gravados em Big-Endian através de `ByteBuffer`: os primeiros 4 bytes contêm o valor do token e os 4 bytes subsequentes contêm a operação.
-
-### Q04: O que acontece se o pacote UDP for perdido na rede Wi-Fi?
-**R:** O UDP não retransmite pacotes perdidos. No nosso código, o processo receptor aguarda até atingir o tempo limite configurado (`socket.setSoTimeout(120000)`), momento em que captura `SocketTimeoutException` e exibe mensagem amigável sem travar o terminal.
-
-### Q05: Por que os escravos devem ser ligados antes do Mestre?
-**R:** Como o UDP não estabelece conexão e não tem fila de persistência se o receptor não estiver escutando, o Escravo 1 precisa estar com seu socket aberto e bloqueado em `receive` antes do Mestre enviar o primeiro pacote.
-
-### Q06: Como os escravos sabem quando devem encerrar sua execução?
-**R:** Cada escravo recebe a quantidade total de voltas pela linha de comando (`args[2]`). Ele mantém um contador local `for (int volta = 1; volta <= voltas; volta++)`. Ao processar a última volta e enviar para o sucessor, ele encerra seu loop e fecha o socket graciosamente.
-
-### Q07: Como o Mestre sabe quando não deve mais enviar o token?
-**R:** O Mestre controla o loop de voltas. Na última volta, após receber o token do Escravo 3 e aplicar sua própria operação matemática, o laço termina e ele imprime o resultado final sem executar um novo envio.
-
-### Q08: Qual o papel da classe `ConfiguracaoRede`?
-**R:** Desacoplar os endereços IP e portas do código das regras de negócio, permitindo que a aplicação leia de `config/rede.properties` em 4 notebooks físicos ou use `127.0.0.1` automaticamente sem qualquer parâmetro em testes locais.
-
-### Q09: Por que a contagem regressiva de 5 segundos foi implementada?
-**R:** Para proporcionar uma experiência didática que permita à banca examinadora acompanhar com clareza o processamento em cada um dos quatro notebooks físicos.
-
-### Q10: Por que não se deve usar `\033[H\033[2J` para limpar a tela a cada volta?
-**R:** Porque o professor precisa auditar o histórico de todas as voltas e operações anteriores sem que sejam apagadas do terminal.
-
-### Q11: Qual foi a contribuição de Heitor para o projeto integrado?
-**R:** Heitor desenvolveu a implementação de referência da camada UDP com a serialização binária `ByteBuffer` de 8 bytes na classe `Message.java`, que foi mantida como padrão do protocolo.
-
-### Q12: Qual foi a contribuição de Isaac para o projeto integrado?
-**R:** Isaac desenvolveu o processo Mestre (`Mestre.java`), implementando a validação dos 3 parâmetros, a inicialização do token em 2, o controle de voltas e a reinjeção do token.
-
-### Q13: Qual foi a contribuição de Camila para o projeto integrado?
-**R:** Camila concebeu a validação estrita dos 3 parâmetros do professor e o método puro `processarToken(int token, int operacao)`.
-
-### Q14: Qual foi a contribuição de Vitor para o projeto integrado?
-**R:** Vitor implementou a lógica de loop contínuo dos escravos, o gerenciamento de encerramento por voltas e a captura robusta de exceções com `SocketTimeoutException`.
-
-### Q15: Qual foi a contribuição de Miqueias para o projeto integrado?
-**R:** Miqueias coordenou a integração, resolveu as incompatibilidades de portas e parâmetros, implementou a interface visual com contador de 5s, criou a infraestrutura de configuração de rede, escreveu a suíte de testes e redigiu a documentação técnica.
-
-### Q16: O que é e por que ocorre o erro `java.net.BindException: Address already in use`?
-**R:** Ocorre quando um processo tenta abrir um `DatagramSocket` em uma porta que já está sendo utilizada por outro processo no mesmo sistema operacional.
-
-### Q17: O que é isolamento de ponto de acesso (*AP Isolation*) e como contorná-lo?
-**R:** É uma política de segurança em redes Wi-Fi que bloqueia datagramas diretos entre clientes da mesma rede sem fio. Pode ser contornado utilizando o roteador pessoal do smartphone (hotspot móvel).
-
-### Q18: Como foi garantido que os comandos oficiais exigidos pelo professor continuassem funcionando?
-**R:** Mantendo os 3 argumentos originais na linha de comando e extraindo as configurações de rede do arquivo `rede.properties` ou de valores padrão estáticos.
-
-### Q19: O que acontece se for passado um número negativo de voltas?
-**R:** Os validadores de entrada em `Mestre.java` e `Escravo.java` barram o valor imediatamente, imprimem mensagem de erro sem lançar crash não tratado e saem com código de erro 1.
-
-### Q20: Como a ordem de bytes (endianness) é tratada na serialização?
-**R:** O `ByteBuffer` do Java utiliza Big-Endian (*network byte order*) por padrão, garantindo que mesmo entre arquiteturas de hardware diferentes (x86, ARM) os inteiros sejam lidos de forma idêntica.
-
-### Q21: O que é o endereço 0.0.0.0 utilizado no bind do socket?
-**R:** Representa o endereço curinga (*INADDR_ANY*), instruindo o sistema operacional a aceitar datagramas UDP em qualquer interface de rede ativa (loopback, cabo de rede ou Wi-Fi).
-
-### Q22: Por que a cópia dos códigos originais foi preservada em `backup/originais/`?
-**R:** Para garantir integridade acadêmica, permitir que a equipe e a banca examinadora confiram as submissões originais de cada estudante e assegurar rastreabilidade com hashes SHA-256.
